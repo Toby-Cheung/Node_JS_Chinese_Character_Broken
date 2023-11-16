@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate Character Image</title>
+</head>
+<body>
+  <form id="pythonForm">
+    <label for="inputCharacter">Enter Character:</label>
+    <input type="text" id="inputCharacter" name="inputCharacter">
+    <button type="submit">Generate Image</button>
+  </form>
+  
+  <div id="outputImage"></div>
+
+  <script>
+    document.getElementById('pythonForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const inputCharacter = document.getElementById('inputCharacter').value;
+      
+      fetch('/runPython', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ character: inputCharacter })
+      })
+      .then(response => response.json())
+      .then(data => {
+        const outputImageDiv = document.getElementById('outputImage');
+        const img = document.createElement('img');
+        img.src = data.imagePath + '?time=' + new Date().getTime(); // Append a unique query parameter
+        outputImageDiv.innerHTML = '';
+        outputImageDiv.appendChild(img);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+# Directories
+node_modules/
+dist/
+
+# Logs and databases
+*.log
+*.sqlite
+
+# Environment files
+.env
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Add any other files or directories you want to ignore...

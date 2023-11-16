@@ -1,0 +1,2 @@
+{"character":"口", "path":"mouth.png"}
+{"character":"木", "path":"wood.png"}
