@@ -97,7 +97,7 @@ if __name__ == "__main__":
     else:
         print("Image generation failed")  # Output a message if image generation fails
 
-    svg_paths = svg_data[character].get('path', None)
+    svg_paths = svg_data[character].get('strokes', None)
     if svg_paths:
         print(json.dumps(svg_paths))  # Output the SVG paths as JSON
     else:

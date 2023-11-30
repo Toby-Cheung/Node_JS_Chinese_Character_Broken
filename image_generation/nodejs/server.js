@@ -16,7 +16,7 @@ app.post('/runPython', (req, res) => {
 
   process.chdir(path.join(__dirname, '../python/'));
 
-  const pyProg = spawn('python3.11', [pythonScriptPath, inputCharacter]);
+  const pyProg = spawn('python3.9', [pythonScriptPath, inputCharacter]);
 
   let scriptOutput = '';
   pyProg.stdout.on('data', (data) => {
