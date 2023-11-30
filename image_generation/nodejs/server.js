@@ -16,18 +16,28 @@ app.post('/runPython', (req, res) => {
 
   process.chdir(path.join(__dirname, '../python/'));
 
-  const pyProg = spawn('python3.9', [pythonScriptPath, inputCharacter]);
+  const pyProg = spawn('python3.11', [pythonScriptPath, inputCharacter]);
 
+  let scriptOutput = '';
   pyProg.stdout.on('data', (data) => {
-    // Capture the image path sent by the Python script
-    const imagePath = data.toString().trim(); // Trim any extra spaces or newlines
-    if (imagePath === 'Image generation failed') {
+    scriptOutput += data.toString();
+  });
+
+  pyProg.on('close', (code) => {
+    const outputLines = scriptOutput.trim().split('\n');
+    const composedImagePath = outputLines[0];
+    const strokeImagePath = outputLines[1];
+    const svgPaths = JSON.parse(outputLines[2] || '[]');
+
+    if (composedImagePath === 'Image generation failed' || !strokeImagePath) {
       console.error('Image generation failed');
       res.status(500).send('Image generation failed');
     } else {
-      console.log('Image generated successfully');
-      // Sending the image path to the client
-      res.send({ imagePath: `/images/generated_image.png` });
+      res.send({ 
+        composedImagePath: `/images/generated_image.png`,
+        strokeImagePath: `/images/stroke_image.png`,
+        svgPaths 
+      });
     }
   });
 

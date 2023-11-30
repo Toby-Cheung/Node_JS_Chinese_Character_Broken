@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Generate Character Image</title>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
 </head>
 <body>
   <form id="pythonForm">
@@ -28,15 +29,46 @@
       .then(response => response.json())
       .then(data => {
         const outputImageDiv = document.getElementById('outputImage');
-        const img = document.createElement('img');
-        img.src = data.imagePath + '?time=' + new Date().getTime(); // Append a unique query parameter
         outputImageDiv.innerHTML = '';
-        outputImageDiv.appendChild(img);
+
+        // Display the composed and stroke images
+        const composedImg = document.createElement('img');
+        composedImg.src = data.composedImagePath + '?time=' + new Date().getTime();
+        outputImageDiv.appendChild(composedImg);
+
+        const strokeImg = document.createElement('img');
+        strokeImg.src = data.strokeImagePath + '?time=' + new Date().getTime();
+        outputImageDiv.appendChild(strokeImg);
+
+        // Render SVG stroke animation
+        renderSvgAnimation(data.svgPaths);
       })
       .catch(error => {
         console.error('Error:', error);
       });
     });
+
+    function renderSvgAnimation(svgPaths) {
+      // Create an SVG element and append it to the outputImageDiv
+      const svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svgElement.setAttribute("width", "300"); // Set appropriate size
+      svgElement.setAttribute("height", "300");
+      document.getElementById('outputImage').appendChild(svgElement);
+
+      const svg = d3.select(svgElement);
+      svgPaths.forEach(function(path, index) {
+        svg.append("path")
+          .attr("d", path)
+          .attr("fill", "none")
+          .attr("stroke", "black") // You can set stroke color as needed
+          .attr("stroke-width", "2")
+          .attr("opacity", 0)
+          .transition()
+          .delay(index * 1000) // Delay for each stroke
+          .duration(1000)
+          .attr("opacity", 1);
+      });
+    }
   </script>
 </body>
 </html>

@@ -77,9 +77,11 @@ def generate_character_image(character, characters_data, mapping_data, font_path
 
 if __name__ == "__main__":
     dictionary_path = 'dictionary.txt'
+    svg_data_path = 'graphics.txt'
     mapping_path = 'mapping.txt'
 
     characters_data = load_external_data(dictionary_path)
+    svg_data = load_external_data(svg_data_path)
     mapping_data = load_external_data(mapping_path)
 
     character = sys.argv[1]  # Get character input from command line argument
@@ -94,3 +96,9 @@ if __name__ == "__main__":
         print(generated_image_path)  # Output the image path
     else:
         print("Image generation failed")  # Output a message if image generation fails
+
+    svg_paths = svg_data[character].get('path', None)
+    if svg_paths:
+        print(json.dumps(svg_paths))  # Output the SVG paths as JSON
+    else:
+        print("SVG data not found")
